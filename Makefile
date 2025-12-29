@@ -19,7 +19,7 @@ BUILD_DIR=build
 CMD_DIR=cmd/certcheck
 
 # Platforms for cross-compilation
-PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
+PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 freebsd/amd64 freebsd/arm64
 
 .PHONY: all build clean test coverage deps install release build-all help
 
