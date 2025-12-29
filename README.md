@@ -170,21 +170,6 @@ make clean
 make install
 ```
 
-## Project Structure
-
-```
-certcheck/
-├── cmd/certcheck/          # Main application
-├── internal/
-│   ├── cert/              # Certificate handling
-│   ├── config/            # Configuration & flags
-│   ├── connection/        # TLS & StartTLS
-│   └── output/            # Output formatters
-├── go.mod
-├── Makefile
-└── README.md
-```
-
 ## Supported StartTLS Protocols
 
 - **SMTP** (port 25, 587) - Email submission
