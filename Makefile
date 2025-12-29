@@ -31,23 +31,23 @@ build:
 	@mkdir -p ${BUILD_DIR}
 	$(GOBUILD) ${LDFLAGS} -o ${BUILD_DIR}/${BINARY_NAME} ./${CMD_DIR}
 
-## release: Build optimized binary
+## release: Build optimized binaries for all platforms
 release:
-	@echo "Building release version..."
+	@echo "Building release version for all platforms..."
 	@mkdir -p ${BUILD_DIR}
-	$(GOBUILD) ${LDFLAGS} -trimpath -o ${BUILD_DIR}/${BINARY_NAME} ./${CMD_DIR}
-	@echo "Built: ${BUILD_DIR}/${BINARY_NAME}"
-
-## build-all: Cross-compile for all platforms
-build-all:
-	@echo "Cross-compiling for all platforms..."
 	@$(foreach PLATFORM,$(PLATFORMS), \
 		GOOS=$(word 1,$(subst /, ,$(PLATFORM))) \
 		GOARCH=$(word 2,$(subst /, ,$(PLATFORM))) \
 		$(GOBUILD) ${LDFLAGS} -trimpath \
 		-o ${BUILD_DIR}/${BINARY_NAME}-$(subst /,-,$(PLATFORM))$(if $(findstring windows,$(PLATFORM)),.exe) \
-		./${CMD_DIR} && echo "✓ Built for $(PLATFORM)" || exit 1; \
+		./${CMD_DIR} && echo "✓ Built $(PLATFORM)" || exit 1; \
 	)
+	@echo ""
+	@echo "Release builds completed in ${BUILD_DIR}/"
+	@ls -lh ${BUILD_DIR}
+
+## build-all: Alias for release (cross-compile for all platforms)
+build-all: release
 
 ## test: Run tests
 test:
