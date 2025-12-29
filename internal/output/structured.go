@@ -17,7 +17,9 @@ func writeJSON(info *cert.Info, w io.Writer) error {
 
 func writeYAML(info *cert.Info, w io.Writer) error {
 	enc := yaml.NewEncoder(w)
-	defer enc.Close()
+	defer func() {
+		_ = enc.Close()
+	}()
 	return enc.Encode(info)
 }
 

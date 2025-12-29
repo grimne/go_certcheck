@@ -23,7 +23,9 @@ func FetchCertInfo(target string, cfg *config.Config) (*cert.Info, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	defer func() {
+		_ = conn.Close()
+	}()
 
 	state := conn.ConnectionState()
 
@@ -91,7 +93,7 @@ func dialStartTLS(target string, cfg *config.Config) (*tls.Conn, error) {
 	}
 
 	if err := performStartTLS(netConn, cfg.StartTLS, cfg.ServerName); err != nil {
-		netConn.Close()
+		_ = netConn.Close()
 		return nil, fmt.Errorf("STARTTLS handshake failed: %w", err)
 	}
 
@@ -103,7 +105,7 @@ func dialStartTLS(target string, cfg *config.Config) (*tls.Conn, error) {
 
 	tlsConn := tls.Client(netConn, tlsConfig)
 	if err := tlsConn.Handshake(); err != nil {
-		tlsConn.Close()
+		_ = tlsConn.Close()
 		return nil, fmt.Errorf("TLS handshake failed: %w", err)
 	}
 
