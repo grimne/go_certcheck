@@ -120,8 +120,6 @@ func performStartTLS(conn net.Conn, proto config.StartTLSProtocol, serverName st
 		return startTLSPOP3(conn)
 	case config.ProtocolFTP:
 		return startTLSFTP(conn)
-	case config.ProtocolXMPP:
-		return startTLSXMPP(conn, serverName)
 	default:
 		return fmt.Errorf("unsupported STARTTLS protocol: %s", proto)
 	}

@@ -28,7 +28,6 @@ const (
 	ProtocolIMAP StartTLSProtocol = "imap"
 	ProtocolPOP3 StartTLSProtocol = "pop3"
 	ProtocolFTP  StartTLSProtocol = "ftp"
-	ProtocolXMPP StartTLSProtocol = "xmpp"
 )
 
 // Config holds application configuration
@@ -48,7 +47,6 @@ var defaultPorts = map[StartTLSProtocol]string{
 	ProtocolIMAP: "143",
 	ProtocolPOP3: "110",
 	ProtocolFTP:  "21",
-	ProtocolXMPP: "5222",
 }
 
 // Parse parses command-line flags and returns configuration
@@ -63,7 +61,7 @@ func Parse() *Config {
 
 	flag.StringVar(&serverName, "sni", "", "SNI / ServerName override (default: host from target)")
 	flag.DurationVar(&timeout, "timeout", 10*time.Second, "dial timeout (e.g. 10s)")
-	flag.StringVar(&startTLS, "starttls", "", "starttls protocol: smtp|imap|pop3|ftp|xmpp")
+	flag.StringVar(&startTLS, "starttls", "", "starttls protocol: smtp|imap|pop3|ftp")
 	flag.BoolVar(&printChain, "chain", true, "include certificate chain in output")
 	flag.StringVar(&output, "o", "text", "output format: text|json|yaml|toml")
 	flag.Parse()
@@ -77,7 +75,7 @@ func Parse() *Config {
 	proto := StartTLSProtocol(strings.ToLower(startTLS))
 
 	if startTLS != "" && !isValidStartTLS(proto) {
-		fmt.Fprintf(os.Stderr, "Invalid starttls protocol: %s (valid: smtp, imap, pop3, ftp, xmpp)\n", startTLS)
+		fmt.Fprintf(os.Stderr, "Invalid starttls protocol: %s (valid: smtp, imap, pop3, ftp)\n", startTLS)
 		os.Exit(2)
 	}
 
@@ -133,8 +131,7 @@ func isValidFormat(format OutputFormat) bool {
 
 func isValidStartTLS(proto StartTLSProtocol) bool {
 	return proto == ProtocolSMTP || proto == ProtocolIMAP ||
-	       proto == ProtocolPOP3 || proto == ProtocolFTP ||
-	       proto == ProtocolXMPP
+	       proto == ProtocolPOP3 || proto == ProtocolFTP
 }
 
 func splitHostPortDefault(input, defaultPort string) (host, port string, err error) {

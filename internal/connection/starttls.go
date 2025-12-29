@@ -97,40 +97,6 @@ func startTLSFTP(conn net.Conn) error {
 	return nil
 }
 
-func startTLSXMPP(conn net.Conn, serverName string) error {
-	streamHeader := fmt.Sprintf("<?xml version='1.0'?><stream:stream to='%s' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>", serverName)
-	if _, err := fmt.Fprintf(conn, "%s", streamHeader); err != nil {
-		return err
-	}
-
-	buf := make([]byte, 4096)
-	n, err := conn.Read(buf)
-	if err != nil {
-		return fmt.Errorf("reading XMPP stream: %w", err)
-	}
-	response := string(buf[:n])
-
-	if !strings.Contains(response, "<stream:features") {
-		return fmt.Errorf("no stream features in response")
-	}
-
-	if _, err := fmt.Fprintf(conn, "<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"); err != nil {
-		return err
-	}
-
-	n, err = conn.Read(buf)
-	if err != nil {
-		return fmt.Errorf("reading STARTTLS response: %w", err)
-	}
-	response = string(buf[:n])
-
-	if !strings.Contains(response, "<proceed") {
-		return fmt.Errorf("STARTTLS not accepted")
-	}
-
-	return nil
-}
-
 func readSMTPResponse(reader *bufio.Reader, expectedCode string) (string, error) {
 	for {
 		line, err := reader.ReadString('\n')
