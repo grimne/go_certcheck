@@ -12,6 +12,20 @@ A fast, modern TLS/SSL certificate inspection tool with support for direct TLS c
 **Expiry checking** with days-until-expiry  
 **SNI support** for virtual hosting  
 
+## Quick Start Build Instructions
+
+### 1. Initialize Project
+
+```bash
+# Initialize Go module
+go mod init github.com/grimne/certcheck
+
+# Download dependencies
+go get github.com/BurntSushi/toml@v1.3.2
+go get gopkg.in/yaml.v3@v3.0.1
+go mod tidy
+```
+
 ## Installation
 
 ### From Source
